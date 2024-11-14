@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF14 極エターナルクイーン討滅戦 練習</title>
+<style>
+  /* 基本樣式 */
+  body { font-family: Arial, sans-serif; text-align: center; }
+  .question, .feedback { margin: 15px; }
+  .correct { background-color: green; color: white; }
+  .wrong { background-color: red; color: white; }
+  button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+  .answer-option { display: block; margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<h1>FF14 極エターナルクイーン討滅戦 練習</h1>
+<p>點擊「開始測試」來隨機選擇一個冰塊連線並進行練習。</p>
+
+<!-- 使用img標籤直接顯示圖片 -->
+<img src="https://i.imgur.com/TPjBc6R.png" alt="極エターナルクイーン討滅戦 圖像" width="500">
+
+<div class="question">
+  <button onclick="startTest()">開始測試</button>
+</div>
+
+<div class="feedback" id="feedback"></div>
+<p id="timer">計時: 0 秒</p>
+
+<script>
+  let startTime, interval;
+  let answerCount = 0;
+
+  // 正確答案資料
+  const answers = {
+    1: { order: "先", bridge: "右上", position: "R1", return: "後", returnBridge: "右上" },
+    2: { order: "先", bridge: "右下", position: "R2", return: "後", returnBridge: "右下" },
+    3: { order: "先", bridge: "左下", position: "L2", return: "後", returnBridge: "左下" },
+    4: { order: "先", bridge: "右上", position: "L1", return: "後", returnBridge: "左上" },
+    5: { order: "後", bridge: "右下", position: "R4", return: "先", returnBridge: "右下" },
+    6: { order: "後", bridge: "右上", position: "R3", return: "先", returnBridge: "右上" },
+    7: { order: "後", bridge: "左下", position: "L4", return: "先", returnBridge: "左下" },
+    8: { order: "後", bridge: "左上", position: "L3", return: "先", returnBridge: "左上" }
+  };
+
+  // 啟動測試
+  function startTest() {
+    // 重置計時
+    clearInterval(interval);
+    startTime = Date.now();
+    interval = setInterval(updateTimer, 1000);
+    answerCount = 0;
+
+    // 隨機選擇一個冰塊編號
+    const iceNum = Math.floor(Math.random() * 8) + 1;
+    const correctAnswer = answers[iceNum];
+    document.getElementById('feedback').innerHTML = `
+      <p>冰塊 ${iceNum} 連線，請選擇正確答案：</p>
+      <div class="answer-option">
+        1. 先走/後走: 
+        <button onclick="checkAnswer(this, 'order', '${correctAnswer.order}', '先')">先</button>
+        <button onclick="checkAnswer(this, 'order', '${correctAnswer.order}', '後')">後</button>
+      </div>
+      <div class="answer-option">
+        2. 走哪一座橋: 
+        <button onclick="checkAnswer(this, 'bridge', '${correctAnswer.bridge}', '左上')">左上</button>
+        <button onclick="checkAnswer(this, 'bridge', '${correctAnswer.bridge}', '右上')">右上</button>
+        <button onclick="checkAnswer(this, 'bridge', '${correctAnswer.bridge}', '左下')">左下</button>
+        <button onclick="checkAnswer(this, 'bridge', '${correctAnswer.bridge}', '右下')">右下</button>
+      </div>
+      <div class="answer-option">
+        3. 站在哪裡: 
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'L1')">L1</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'L2')">L2</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'L3')">L3</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'L4')">L4</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'R1')">R1</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'R2')">R2</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'R3')">R3</button>
+        <button onclick="checkAnswer(this, 'position', '${correctAnswer.position}', 'R4')">R4</button>
+      </div>
+      <div class="answer-option">
+        4. 先回來/後回來: 
+        <button onclick="checkAnswer(this, 'return', '${correctAnswer.return}', '先')">先</button>
+        <button onclick="checkAnswer(this, 'return', '${correctAnswer.return}', '後')">後</button>
+      </div>
+      <div class="answer-option">
+        5. 回來的橋: 
+        <button onclick="checkAnswer(this, 'returnBridge', '${correctAnswer.returnBridge}', '左上')">左上</button>
+        <button onclick="checkAnswer(this, 'returnBridge', '${correctAnswer.returnBridge}', '右上')">右上</button>
+        <button onclick="checkAnswer(this, 'returnBridge', '${correctAnswer.returnBridge}', '左下')">左下</button>
+        <button onclick="checkAnswer(this, 'returnBridge', '${correctAnswer.returnBridge}', '右下')">右下</button>
+      </div>
+    `;
+  }
+
+  // 更新計時器
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('timer').textContent = `計時: ${elapsed} 秒`;
+  }
+
+  // 檢查答案
+  function checkAnswer(button, type, correct, selected) {
+    if (correct === selected) {
+      button.classList.add("correct");
+    } else {
+      button.classList.add("wrong");
+    }
+    // 禁用同一題的其他按鈕
+    const parent = button.parentElement;
+    Array.from(parent.children).forEach(btn => btn.disabled = true);
+
+    // 計數答題數
+    answerCount++;
+    // 完成所有題目後結束計時
+    if (answerCount === 5) {
+      clearInterval(interval);
+      const finalTime = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('timer').textContent = `完成時間: ${finalTime} 秒`;
+    }
+  }
+</script>
+
+</body>
+</html>
