@@ -33,12 +33,12 @@
   let startTime, interval;
   let answerCount = 0;
 
-  // 正確答案資料
+  // 正確答案資料，已修正4號冰塊的答案
   const answers = {
     1: { order: "先", bridge: "右上", position: "R1", return: "後", returnBridge: "右上" },
     2: { order: "先", bridge: "右下", position: "R2", return: "後", returnBridge: "右下" },
     3: { order: "先", bridge: "左下", position: "L2", return: "後", returnBridge: "左下" },
-    4: { order: "先", bridge: "右上", position: "L1", return: "後", returnBridge: "左上" },
+    4: { order: "先", bridge: "左上", position: "L1", return: "後", returnBridge: "左上" }, // 修正的答案
     5: { order: "後", bridge: "右下", position: "R4", return: "先", returnBridge: "右下" },
     6: { order: "後", bridge: "右上", position: "R3", return: "先", returnBridge: "右上" },
     7: { order: "後", bridge: "左下", position: "L4", return: "先", returnBridge: "左下" },
